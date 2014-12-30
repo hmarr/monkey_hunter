@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+$: << 'lib'
+require 'monkey_hunter'
+
+gem_name = ARGV[0]
+if gem_name.nil?
+  $stderr.puts("Usage: monkey-hunter <gem>")
+  exit 1
+end
+
+MonkeyHunter.go_hunting!(gem_name)
+
