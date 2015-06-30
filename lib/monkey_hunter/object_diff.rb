@@ -21,7 +21,36 @@ module MonkeyHunter
       end
     end
 
+    def to_h
+      {
+        imethods: Hash[@imethods.map { |name, info| serialize_method_diff(name, info) }],
+        smethods: Hash[@smethods.map { |name, info| serialize_method_diff(name, info) }],
+        consts: @consts,
+      }
+    end
+
     private
+
+    def serialize_method_diff(name, info)
+      [
+        name,
+        {
+          action: info[:action],
+          original: serialize_method(info[:original]),
+          new: serialize_method(info[:new]),
+        }
+      ]
+    end
+
+    def serialize_method(method)
+      return nil if method.nil?
+      {
+        arity: method.arity,
+        params: method.parameters,
+        owner: method.owner,
+        source_location: method.source_location
+      }
+    end
 
     def sig_hash_compare(a, b)
       (a.keys + b.keys).uniq.map do |key|

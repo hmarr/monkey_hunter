@@ -25,6 +25,11 @@ module MonkeyHunter
     case output
     when :terminal
       TerminalFormatter.new(graph_diffs).display
+    when :json
+      diff_hash = graph_diffs.map do |obj, diff|
+        [obj.name, diff.to_h]
+      end
+      puts JSON.pretty_generate(Hash[diff_hash])
     else
       logger.error("Invalid output format #{output}")
       return
